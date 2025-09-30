@@ -11,7 +11,7 @@ export default async function auth(req, res, next) {
         const decodeToken = await jwt.verify(token, JWT_SECRET);
         console.log("got the payload from token");
         req.user = { id: decodeToken.id, ...decodeToken };
-        console.log(req.user);
+        console.log("auth page req data", req.user.id);
         next();
     }
     catch (error) {

@@ -17,7 +17,7 @@ export default async function auth(req:Request,res:Response,next:NextFunction) {
         console.log("got the payload from token");
         
         req.user={id:decodeToken.id,...decodeToken}
-        console.log(req.user)
+        console.log("auth page req data",req.user.id)
         next()
     } catch (error) {
         res.status(501).json("internal server error furing auth middleware")
