@@ -158,4 +158,11 @@ app.get("/api/v1/fetchExpense", auth, async (req, res) => {
         res.status(500).json({ message: "Error fetching expenses", error });
     }
 });
+app.post("/api/v1/expenses/bulkDelete", auth, async (req, res) => {
+    const { ids } = req.body;
+    ids.map(async (id, i) => {
+        await Expense.findByIdAndDelete(id);
+        console.log(`expenses is deleted with id ${id}`);
+    });
+});
 //# sourceMappingURL=index.js.map

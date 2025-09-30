@@ -12,14 +12,14 @@ interface User {
 }
 
 export interface Expense {
-  id: number
+  id: string
   amount: number
   description: string
   category: string
   paymentMethod: string
   merchant: string
   date: Date
-  time?:string,
+  time?: string,
   createdAt: Date  // Add createdAt field
 }
 
@@ -33,7 +33,7 @@ interface UserContextType {
   recentTransactions: Expense[] // Changed from recentTransaction for clarity
   setRecentTransactions: (transactions: Expense[]) => void
   totalExpensAmnt: number
-  
+  removeExpensesFromState: (deletedIds: string[]) => void // Add this function
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -43,8 +43,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [viewExpenses, setViewExpenses] = useState<Expense[]>([])
   const [recentTransactions, setRecentTransactions] = useState<Expense[]>([])
-  let totalExpensAmnt=0;
-  
+  let totalExpensAmnt = 0;
+
+  // Function to remove deleted expenses from state
+  const removeExpensesFromState = (deletedIds: string[]) => {
+    const updatedExpenses = viewExpenses.filter(expense => 
+      !deletedIds.includes(expense.id)
+    )
+    setViewExpenses(updatedExpenses)
+    setRecentTransactions(updatedExpenses.slice(0, 5))
+  }
 
   // Add new expense and update recent transactions
   const addExpense = (newExpense: Expense) => {
@@ -66,8 +74,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           withCredentials: true
         })
 
-        let totalExpensAmnt=amountSum(expenseResponse.data.expenses)
-        console.log("analytic pagee",totalExpensAmnt)
+        let totalExpensAmnt = amountSum(expenseResponse.data.expenses)
+        console.log("analytic pagee", totalExpensAmnt)
         setUser(userResponse.data)
         setViewExpenses(expenseResponse.data.expenses)
         
@@ -104,7 +112,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       addExpense,
       loading,
       recentTransactions, // Changed name
-      setRecentTransactions // Changed name
+      setRecentTransactions, // Changed name
+      removeExpensesFromState // Add this to the context value
     }}>
       {children}
     </UserContext.Provider>

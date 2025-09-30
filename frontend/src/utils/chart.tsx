@@ -25,9 +25,6 @@ type YearlyExpense = {
 
 
 
-type ExpenseAreaChartProps = {
-  selectedData: 'weekly' | 'monthly' | 'yearly';
-};
 
 
 
@@ -36,7 +33,8 @@ type ExpenseAreaChartProps = {
 
 
 
-export default function ExpenseAreaChart({selectedData}:ExpenseAreaChartProps) {
+
+export default function ExpenseAreaChart({selectedData}:any) {
     const {viewExpenses}=useUser()
     const {year,month}=getCurrentMonthYear()
 

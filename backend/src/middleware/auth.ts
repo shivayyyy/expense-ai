@@ -8,7 +8,7 @@ const JWT_SECRET=process.env.JWT_SECRET
 export default async function auth(req:Request,res:Response,next:NextFunction) {
     const token=req.cookies.token;
     if(!token){
-        res.status(401).json("token is missing at auth page")
+        return res.status(401).json("token is missing at auth page")
     }
 
     try {
@@ -18,9 +18,9 @@ export default async function auth(req:Request,res:Response,next:NextFunction) {
         
         req.user={id:decodeToken.id,...decodeToken}
         console.log("auth page req data",req.user.id)
-        next()
+        return next()
     } catch (error) {
-        res.status(501).json("internal server error furing auth middleware")
+        return res.status(501).json("internal server error furing auth middleware")
     }
 
 }
